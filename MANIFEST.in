@@ -1,0 +1,4 @@
+include AUTHORS.txt
+include LICENSE.txt
+exclude Makefile
+prune misc
