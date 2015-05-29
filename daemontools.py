@@ -108,10 +108,11 @@ class Daemontools:
 
     @classmethod
     def list_services(cls):
-        result, lines = [], os.popen('sudo svstat /etc/service/*').read().split('\n')
-        for line in lines:
-            if line:
-                result.append(line.split(':')[0].split('/')[-1])
+        #return os.popen('sudo ls -L %s' % cls.SVC_ROOT).read().rstrip().split('\n')
+        result, lst = [], os.listdir(cls.SVC_ROOT)
+        for name in lst:
+            if os.path.isdir(os.path.join(cls.SVC_ROOT, name)):
+                result.append(name)
         return result
 
     @classmethod
