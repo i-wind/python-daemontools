@@ -10,7 +10,7 @@ import shlex
 import platform
 from time import sleep, time
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 def system(command):
   """

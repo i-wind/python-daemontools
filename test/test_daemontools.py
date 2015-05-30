@@ -9,7 +9,7 @@ import daemontools as dt
 
 class SystemTests(unittest.TestCase):
   def test_system(self):
-    self.assertEqual('__version__ = "0.0.1"\n', dt.system('cat ../daemontools.py |grep version')[0])
+    self.assertEqual('__version__ = "0.0.2"\n', dt.system('cat ../daemontools.py |grep version')[0])
 
   def test_system_ls(self):
     self.assertEqual('test_daemontools.py\n', dt.system('ls')[0])
