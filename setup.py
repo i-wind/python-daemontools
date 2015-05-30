@@ -18,7 +18,7 @@ setup(
   license = 'MIT',
   keywords = 'daemontools',
   url = 'https://github.com/i-wind/python-daemontools',
-  download_url = 'https://github.com/i-wind/python-daemontools/archive/%s.tar.gz' % version,
+  download_url = 'https://github.com/i-wind/python-daemontools/archive/v%s.tar.gz' % version,
   classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 2",

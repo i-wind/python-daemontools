@@ -6,6 +6,7 @@
 """
 import os, re
 import subprocess
+import shlex
 import platform
 from time import sleep, time
 
@@ -19,7 +20,7 @@ def system(command):
   """
   if isinstance(command, basestring):
     if '|' in command:
-      cmd_list = (c.split() for c in command.strip().split('|'))
+      cmd_list = (shlex.split(c) for c in command.strip().split('|'))
       prev = None
       for cmd in cmd_list:
         p = subprocess.Popen(cmd,
