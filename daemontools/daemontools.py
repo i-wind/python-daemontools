@@ -5,41 +5,9 @@
 @about  :
 """
 import os, re
-import subprocess
-import shlex
 import platform
 from time import sleep, time
-
-__version__ = "0.0.2"
-
-def system(command):
-  """
-  Результат выполнения системной команды
-  $ ret=system('dmesg | grep hda')
-  $ print ret[0]
-  """
-  if isinstance(command, basestring):
-    if '|' in command:
-      cmd_list = (shlex.split(c) for c in command.strip().split('|'))
-      prev = None
-      for cmd in cmd_list:
-        p = subprocess.Popen(cmd,
-                 stdin =prev.stdout if prev else None,
-                 stdout=subprocess.PIPE,
-                 stderr=subprocess.PIPE)
-        if prev: prev.stdout.close()
-        prev = p
-      return p.communicate()
-    else:
-      cmd = command.split()
-  else:
-    cmd = command
-
-  p = subprocess.Popen(cmd,
-                       stdout=subprocess.PIPE,
-                       stderr=subprocess.PIPE)
-  # communicate возвращает tuple (stdout, stderr)
-  return p.communicate()
+from utils import system
 
 class DaemontoolsError(Exception): pass
 
@@ -53,7 +21,7 @@ class Daemontools:
   @classmethod
   def status(cls, name):
     cls._check_service_exists(name)
-    ret, err = system('sudo svstat %s' % cls.path)
+    ret, err = system('svstat %s' % cls.path)
     if err: raise Exception(err)
     match = re.match('.*?:\s*(\S+).*\s(\d+) seconds.*', ret)
     if not match:
@@ -109,7 +77,7 @@ class Daemontools:
 
   @classmethod
   def list_services(cls):
-    #return os.popen('sudo ls -L %s' % cls.SVC_ROOT).read().rstrip().split('\n')
+    #return os.popen('ls -L %s' % cls.SVC_ROOT).read().rstrip().split('\n')
     result, lst = [], os.listdir(cls.SVC_ROOT)
     for name in lst:
       if os.path.isdir(os.path.join(cls.SVC_ROOT, name)):
@@ -166,6 +134,6 @@ class Daemontools:
       ret, err = system('status svscan')
       if 'stop' in ret: os.system('start svscan; sleep 1')
     cls._check_service_exists(name)
-    ret, err = system('sudo svc -%s %s' % (command, cls.path))
+    ret, err = system('svc -%s %s' % (command, cls.path))
     if err: raise Exception(err)
     return True
