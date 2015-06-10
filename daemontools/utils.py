@@ -9,7 +9,7 @@ import subprocess
 
 def system(command):
   """
-  Результат выполнения системной команды
+  System command execution result
   $ ret=system('dmesg | grep hda')
   $ print ret[0]
   """
@@ -34,4 +34,17 @@ def system(command):
                        stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
   # communicate возвращает tuple (stdout, stderr)
+  return p.communicate()
+
+
+def bash(command, shell=True):
+  """
+  System command execution result
+  $ ret=bash('dmesg | grep hda')
+  $ print ret[0]
+  """
+  if shell:
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+  else:
+    p = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   return p.communicate()

@@ -7,9 +7,49 @@
 import os, re
 import platform
 from time import sleep, time
-from utils import system
+from utils import bash
+
 
 class DaemontoolsError(Exception): pass
+
+
+class Scanner:
+  """ Simple svscan wrapper """
+  def __init__(self):
+    self.svscan_ = bash('ps ax |grep -Po "svscan\s+.*$"')[0].rstrip()
+    self.svc_root_ = ''
+    if (self.svscan_ != ''):
+      self.svc_root_ = self.svscan_.split()[1]
+    self.status_ = ''
+
+  @classmethod
+  def status(cls):
+    return bash('status svscan', False)[0].rstrip()
+
+  def running(self):
+    self.status_ = self.status()
+    return 'start/running' in self.status_
+
+  def waiting(self):
+    self.status_ = self.status()
+    return 'stop/waiting' in self.status_
+
+  def unknown(self):
+    self.status_ = self.status()
+    return 'Unknown job' in self.status_
+
+  def start(self):
+    if not self.running():
+      ret = bash('start svscan', False)
+      sleep(0.5)
+    return self.running()
+
+  def stop(self):
+    if not self.waiting():
+      ret = bash('stop svscan', False)
+      sleep(0.5)
+    return self.waiting()
+
 
 class Daemontools:
   SVC_ROOT = '/etc/service'
